@@ -8,5 +8,6 @@ const k3cloud = new K3Cloud({
   appsecret: "28ecd1f20b524bc5bf1835ef2c4984e8"
 });
 
-const cookie = k3cloud.auth();
-console.log('cookie:', cookie)
+k3cloud.auth().then((cookie) => {
+  console.log('cookie: ', cookie)
+});
