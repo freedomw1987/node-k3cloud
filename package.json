@@ -1,0 +1,23 @@
+{
+  "name": "node-k3cloud",
+  "version": "1.0.0",
+  "description": "Nodejs SDK for K3cloud ERP SYSTEM",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/freedomw1987/node-k3cloud.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/freedomw1987/node-k3cloud/issues"
+  },
+  "homepage": "https://github.com/freedomw1987/node-k3cloud#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "axios": "^0.24.0"
+  }
+}
