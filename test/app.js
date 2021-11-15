@@ -26,7 +26,11 @@ const addClient = async ({
   });
 
   if (client) {
-    return client;
+    return {
+      ...client,
+      Id: client.FCUSTID,
+      Number: client.FNumber
+    };
   } else {
     return await k3cloud.client.saveClient({
       cookie: cookie,
@@ -81,7 +85,7 @@ const addClient = async ({
   const org = await k3cloud.org.getOrg({
     cookie: cookie,
     data: {
-      Number: '102.08'
+      Number: '102'
     }
   });
   if (!!!org.Id) {
@@ -109,7 +113,7 @@ const addClient = async ({
   // console.log('taxRate:', taxRate);
 
   const client = await addClient({
-    name: 'David Chu (Webstore test13)',
+    name: 'David Chu 3(Test20211115)',
     phone: '85366297530',
     email: 'davidaasm@gmail.com',
     address: 'test address',
@@ -119,6 +123,42 @@ const addClient = async ({
     taxRateId: taxRate.FNumber
   });
 
-  console.log('client: ', client);
+  // console.log(client);
+
+  if (client?.FCUSTID) {
+    const resp = await k3cloud.client.auditClient({
+      cookie: cookie,
+      data: {
+        createOrgId: org.Number,
+        Numbers: [
+          client.Number
+        ]
+      }
+    });
+  } else {
+    const resp = await k3cloud.client.submitClient({
+      cookie: cookie,
+      data: {
+        createOrgId: org.Number,
+        Numbers: [
+          client.Number
+        ]
+      }
+    });
+
+    if (!!resp?.ResponseStatus?.IsSuccess) {
+      const resp = await k3cloud.client.auditClient({
+        cookie: cookie,
+        data: {
+          createOrgId: org.Number,
+          Numbers: [
+            client.Number
+          ]
+        }
+      });
+    }
+  }
+
+
 
 })()

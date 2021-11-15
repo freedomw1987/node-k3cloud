@@ -2,15 +2,15 @@ const K3Cloud = require('../libs/K3Cloud');
 
 //default Data
 
-module.exports = class K3CloudClient extends K3Cloud {
+module.exports = class K3CloudSaleOrder extends K3Cloud {
 
   constructor(config) {
     super(config);
     return this;
   }
 
-  async listClient({ cookie, fieldKeys = [], limit, skip, filterString, orderString }) {
-    const defaultFieldKeys = require('../defaultData/clientList');
+  async listSaleOrder({ cookie, fieldKeys = [], limit, skip, filterString, orderString }) {
+    const defaultFieldKeys = require('../defaultData/saleOrderList');
     return await this.list({
       cookie: cookie,
       formId: "BD_Customer",
@@ -22,8 +22,8 @@ module.exports = class K3CloudClient extends K3Cloud {
     })
   }
 
-  async listOneClient({ cookie, fieldKeys = [], limit, skip, filterString, orderString }) {
-    const resp = await this.listClient({
+  async listOneSaleOrder({ cookie, fieldKeys = [], limit, skip, filterString, orderString }) {
+    const resp = await this.listSaleOrder({
       cookie: cookie,
       fieldKeys: fieldKeys,
       limit: limit,
@@ -38,8 +38,8 @@ module.exports = class K3CloudClient extends K3Cloud {
     }
   }
 
-  async saveClient({ cookie, data }) {
-    const defaultValue = require("../defaultData/clientSave");
+  async saveSaleOrder({ cookie, data }) {
+    const defaultValue = require("../defaultData/saleOrderSave");
     const model = {
       ...defaultValue.Model,
       ...data.Model
@@ -56,7 +56,7 @@ module.exports = class K3CloudClient extends K3Cloud {
     });
   }
 
-  async submitClient({ cookie, data }) {
+  async submitSaleOrder({ cookie, data }) {
     const defaultValue = require("../defaultData/submit");
     return await this.submit({
       cookie: cookie,
@@ -69,7 +69,7 @@ module.exports = class K3CloudClient extends K3Cloud {
   }
 
 
-  async auditClient({ cookie, data }) {
+  async auditSaleOrder({ cookie, data }) {
     const defaultValue = require("../defaultData/submit");
     return await this.audit({
       cookie: cookie,

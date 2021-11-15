@@ -94,6 +94,7 @@ module.exports = class K3Cloud {
   }
 
   async submit({ cookie, formId, data }) {
+    // console.log('formId: ', formId);
     const payload = {
       formId: formId,
       data
@@ -102,6 +103,38 @@ module.exports = class K3Cloud {
     const resp = await this.instance.post(apiPath.submitPath, payload, {
       headers: { cookie }
     });
+    // console.log('resp: ', JSON.stringify(resp.data, null, 3));
+    const results = resp.data
+    return results.Result;
+  }
+
+
+  async submit({ cookie, formId, data }) {
+    // console.log('formId: ', formId);
+    const payload = {
+      formId: formId,
+      data
+    }
+    // console.log('payload:', JSON.stringify(payload, null, 3))
+    const resp = await this.instance.post(apiPath.submitPath, payload, {
+      headers: { cookie }
+    });
+    // console.log('resp: ', JSON.stringify(resp.data, null, 3));
+    const results = resp.data
+    return results.Result;
+  }
+
+  async audit({ cookie, formId, data }) {
+    // console.log('formId: ', formId);
+    const payload = {
+      formId: formId,
+      data
+    }
+    // console.log('payload:', JSON.stringify(payload, null, 3))
+    const resp = await this.instance.post(apiPath.auditPath, payload, {
+      headers: { cookie }
+    });
+    // console.log('resp: ', JSON.stringify(resp.data, null, 3));
     const results = resp.data
     return results.Result;
   }
