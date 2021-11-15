@@ -16,7 +16,10 @@
     "url": "https://github.com/freedomw1987/node-k3cloud/issues"
   },
   "homepage": "https://github.com/freedomw1987/node-k3cloud#readme",
-  "dependencies": {},
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1"
+  },
   "devDependencies": {
     "axios": "^0.24.0"
   }

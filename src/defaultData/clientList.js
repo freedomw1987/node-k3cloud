@@ -9,6 +9,8 @@ module.exports = [
   "FADDRESS",
   "FCreateOrgId",
   "FUseOrgId",
+  "FTRADINGCURRID",
+  "FRECEIVECURRID"
   // "FCOUNTRY",
   // "FPROVINCIAL",
   // "FADDRESS",

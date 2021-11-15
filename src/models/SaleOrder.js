@@ -1,7 +1,6 @@
 const K3Cloud = require('../libs/K3Cloud');
 
 //default Data
-
 module.exports = class K3CloudSaleOrder extends K3Cloud {
 
   constructor(config) {
@@ -13,13 +12,13 @@ module.exports = class K3CloudSaleOrder extends K3Cloud {
     const defaultFieldKeys = require('../defaultData/saleOrderList');
     return await this.list({
       cookie: cookie,
-      formId: "BD_Customer",
+      formId: "SAL_SaleOrder",
       fieldKeys: [...defaultFieldKeys, ...fieldKeys],
       limit: limit,
       skip: skip,
       filterString: filterString,
       orderString: orderString
-    })
+    });
   }
 
   async listOneSaleOrder({ cookie, fieldKeys = [], limit, skip, filterString, orderString }) {
@@ -47,7 +46,7 @@ module.exports = class K3CloudSaleOrder extends K3Cloud {
     // console.log('MODEL: ', JSON.stringify(model, null, 3))
     return await this.save({
       cookie: cookie,
-      formId: "BD_Customer",
+      formId: "SAL_SaleOrder",
       data: {
         ...defaultValue,
         ...data,
@@ -60,7 +59,7 @@ module.exports = class K3CloudSaleOrder extends K3Cloud {
     const defaultValue = require("../defaultData/submit");
     return await this.submit({
       cookie: cookie,
-      formId: "BD_Customer",
+      formId: "SAL_SaleOrder",
       data: {
         ...defaultValue,
         ...data
@@ -73,7 +72,7 @@ module.exports = class K3CloudSaleOrder extends K3Cloud {
     const defaultValue = require("../defaultData/submit");
     return await this.audit({
       cookie: cookie,
-      formId: "BD_Customer",
+      formId: "SAL_SaleOrder",
       data: {
         ...defaultValue,
         ...data
