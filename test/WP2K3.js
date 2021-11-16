@@ -1,17 +1,12 @@
 const moment = require('moment');
 const _ = require('lodash');
 const K3Cloud = require('../src');
+const config = require('./config.json');
 
 module.exports = class WP2K3 {
 
   constructor() {
-    this.k3cloud = new K3Cloud({
-      baseURL: 'http://103.231.252.83:8081',
-      accid: "616392643d7fb6",
-      username: "Administrator",
-      appid: "winfullyLambda",
-      appsecret: "28ecd1f20b524bc5bf1835ef2c4984e8"
-    });
+    this.k3cloud = new K3Cloud(config);
   }
 
   async auth() {
@@ -139,9 +134,10 @@ module.exports = class WP2K3 {
     return client;
   }
 
-  async addSaleOrder({ client, date_created, line_items, order_key, shipping }) {
+  async addSaleOrder({ client, date_created, line_items, order_key, shipping, id }) {
     let data = {
       Model: {
+        FBillNo: `WPORDER${id}`,
         FBillTypeID: {
           FNumber: 'XSDD01_SYS' //標準銷售訂單
         },
@@ -156,7 +152,6 @@ module.exports = class WP2K3 {
         FCustId: {
           FNumber: client.Number,
         },
-        FNote: `網上訂單: ${order_key}`,
         FSalerId: {
           FNumber: '00001' //kent
         },
