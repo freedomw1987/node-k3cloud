@@ -181,7 +181,13 @@ module.exports = class WP2K3 {
         FQty: row.quantity,
         FPrice: row.price,
         FDeliveryDate: moment(new Date(date_created)).format('YYYY-MM-DD'),
-        FReserveType: "1"
+        FReserveType: "1",
+        FStockOrgId: {
+          FNumber: '102.01'
+        },
+        FOwnerId: {
+          FNumber: '102.01'
+        }
       })
     });
 
