@@ -170,25 +170,52 @@ module.exports = class WP2K3 {
       }
     };
     _.each(line_items, (row) => {
-      data.Model.FSaleOrderEntry.push({
-        FEntryID: 0,
-        FMaterialId: {
-          FNumber: row.sku
-        },
-        FUnitID: {
-          FNumber: "jian" //件
-        },
-        FQty: row.quantity,
-        FPrice: row.price,
-        FDeliveryDate: moment(new Date(date_created)).format('YYYY-MM-DD'),
-        FReserveType: "1",
-        FStockOrgId: {
-          FNumber: '102.01'
-        },
-        FOwnerId: {
-          FNumber: '102.01'
-        }
-      })
+      if (/\+/.test(row?.sku)) {
+        let packArr = row.sku.split('+');
+        _.each(packArr, (sku, i) => {
+          data.Model.FSaleOrderEntry.push({
+            FEntryID: 0,
+            FMaterialId: {
+              FNumber: sku
+            },
+            FUnitID: {
+              FNumber: "jian" //件
+            },
+            FQty: row.quantity,
+            FPrice: (i === 0) ? row.price : 0,
+            FDeliveryDate: moment(new Date(date_created)).format('YYYY-MM-DD'),
+            FReserveType: "1",
+            FStockOrgId: {
+              FNumber: '102.01'
+            },
+            FOwnerId: {
+              FNumber: '102.01'
+            }
+          })
+        });
+
+      } else {
+        data.Model.FSaleOrderEntry.push({
+          FEntryID: 0,
+          FMaterialId: {
+            FNumber: row.sku
+          },
+          FUnitID: {
+            FNumber: "jian" //件
+          },
+          FQty: row.quantity,
+          FPrice: row.price,
+          FDeliveryDate: moment(new Date(date_created)).format('YYYY-MM-DD'),
+          FReserveType: "1",
+          FStockOrgId: {
+            FNumber: '102.01'
+          },
+          FOwnerId: {
+            FNumber: '102.01'
+          }
+        })
+      }
+
     });
 
     const saleOrder = await this.k3cloud.saleOrder.saveSaleOrder({
@@ -219,6 +246,95 @@ module.exports = class WP2K3 {
     }
 
     return saleOrder;
+  }
+
+
+  async addReceiveBill({ id, date_created, client, saleOrder, total }) {
+
+    let data = {
+      Model: {
+        FBillTypeID: {
+          FNumber: 'SKDLX01_SYS'
+        },
+        FDATE: moment(new Date(date_created)).format('YYYY-MM-DD'),
+        FCONTACTUNITTYPE: 'BD_Customer',
+        FCONTACTUNIT: {
+          FNumber: client.Number
+        },
+        FSETTLEORGID: {
+          FNumber: this.org.Number
+        },
+        FSALEORGID: {
+          FNumber: this.org.Number
+        },
+        FPAYUNITTYPE: 'BD_Customer',
+        FPAYUNIT: {
+          FNumber: client.Number
+        },
+        FCURRENCYID: {
+          FNumber: this.currency.FNumber
+        },
+        FPAYORGID: {
+          FNumber: this.org.Number
+        },
+        FDOCUMENTSTATUS: 'C',
+        FCancelStatus: 'A',
+        FSETTLECUR: {
+          FNumber: this.currency.FNumber
+        },
+        FEXCHANGERATE: '1',
+        FRECEIVEBILLENTRY: [{
+          FPOSTDATE: moment(new Date(date_created)).format('YYYY-MM-DD'),
+          FPURPOSEID: { //SFKYT02_SYS: 預收款
+            FNumber: "SFKYT02_SYS" //SFKYT01_SYS: 銷售收款
+          },
+          FSETTLETYPEID: {
+            FNumber: 'JSFS01_SYS' // 現金
+            //10: 電子支付； 09: 刷卡
+          },
+          FRECEIVEITEMTYPE: '1',
+          FRECEIVEITEM: saleOrder.Number,
+          FSaleOrderID: saleOrder.Id,
+          FSALEORDERNO: saleOrder.Number,
+          FORDERENTRYID: saleOrder.Id,
+          FRECAMOUNTFOR_E: total,
+          FRECTOTALAMOUNTFOR: total
+        }]
+      }
+    };
+
+    const receiveBill = await this.k3cloud.receiveBill.saveReceiveBill({
+      cookie: this.cookie,
+      data: data
+    });
+
+    if (!!receiveBill?.ResponseStatus?.IsSuccess) {
+      const resp = await this.k3cloud.receiveBill.submitReceiveBill({
+        cookie: this.cookie,
+        data: {
+          createOrgId: this.org.Number,
+          Numbers: [
+            receiveBill.Number
+          ]
+        }
+      });
+
+      if (!!resp?.ResponseStatus?.IsSuccess) {
+        await this.k3cloud.receiveBill.auditReceiveBill({
+          cookie: this.cookie,
+          data: {
+            createOrgId: this.org.Number,
+            Numbers: [
+              receiveBill.Number
+            ]
+          }
+        });
+      }
+    }
+
+
+
+    return receiveBill;
   }
 
 }

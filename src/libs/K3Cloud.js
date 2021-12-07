@@ -83,59 +83,50 @@ module.exports = class K3Cloud {
   async save({ cookie, formId, data }) {
     const payload = {
       formId: formId,
-      data
+      data: JSON.stringify(data)
     }
-    // console.log('payload:', JSON.stringify(payload, null, 3))
+    console.log('payload', JSON.stringify(payload));
     const resp = await this.instance.post(apiPath.savePath, payload, {
       headers: { cookie }
     });
-    const results = resp.data
+    const results = resp.data;
+    if (!results.Result?.ResponseStatus?.IsSuccess) {
+      console.log(results.Result?.ResponseStatus?.Errors);
+    }
     return results.Result;
   }
 
   async submit({ cookie, formId, data }) {
-    // console.log('formId: ', formId);
     const payload = {
       formId: formId,
       data
     }
-    // console.log('payload:', JSON.stringify(payload, null, 3))
+
     const resp = await this.instance.post(apiPath.submitPath, payload, {
       headers: { cookie }
     });
-    // console.log('resp: ', JSON.stringify(resp.data, null, 3));
-    const results = resp.data
-    return results.Result;
-  }
 
-
-  async submit({ cookie, formId, data }) {
-    // console.log('formId: ', formId);
-    const payload = {
-      formId: formId,
-      data
+    const results = resp.data;
+    if (!results.Result?.ResponseStatus?.IsSuccess) {
+      console.log(results.Result?.ResponseStatus?.Errors);
     }
-    // console.log('payload:', JSON.stringify(payload, null, 3))
-    const resp = await this.instance.post(apiPath.submitPath, payload, {
-      headers: { cookie }
-    });
-    // console.log('resp: ', JSON.stringify(resp.data, null, 3));
-    const results = resp.data
     return results.Result;
   }
 
   async audit({ cookie, formId, data }) {
-    // console.log('formId: ', formId);
     const payload = {
       formId: formId,
       data
     }
-    // console.log('payload:', JSON.stringify(payload, null, 3))
+
     const resp = await this.instance.post(apiPath.auditPath, payload, {
       headers: { cookie }
     });
-    // console.log('resp: ', JSON.stringify(resp.data, null, 3));
-    const results = resp.data
+
+    const results = resp.data;
+    if (!results.Result?.ResponseStatus?.IsSuccess) {
+      console.log(results.Result?.ResponseStatus?.Errors);
+    }
     return results.Result;
   }
 
