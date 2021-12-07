@@ -1,0 +1,15 @@
+module.exports = [
+  "FID",
+  "FBillTypeID",
+  "FDATE",
+  "FCONTACTUNITTYPE",
+  "FCONTACTUNIT",
+  "FPAYUNITTYPE",
+  "FPAYUNIT",
+  "FCURRENCYID",
+  "FPAYORGID",
+  "FDOCUMENTSTATUS",
+  "FCancelStatus",
+  "FSETTLECUR",
+  "FRECEIVEBILLENTRY"
+]
