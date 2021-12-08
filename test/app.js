@@ -19,22 +19,25 @@ const myEvent = require('./event/event.json');
     address: body?.billing?.address_1 + ", \n" + body?.billing?.address_2 + ", \n" + body?.billing?.city + ", \n" + body?.billing?.state + ", \n" + body?.billing?.country
   });
 
-  // console.log('sale_order\'s client: ', client);
+  console.log('sale_order\'s client: ', client);
 
-  // const saleOrder = await wp2k3.addSaleOrder({
-  //   ...body,
-  //   client: client
-  // });
+  if (body?.payment_method && body?.payment_method.length > 0){
 
-  // console.log('sale_order: ', saleOrder);
+    const saleOrder = await wp2k3.addSaleOrder({
+      ...body,
+      client: client
+    });
+  
+    console.log('sale_order: ', saleOrder);
 
-  // if (body?.payment_method !== 'cod') {
-  const receiveBill = await wp2k3.addReceiveBill({
-    ...body,
-    client: client,
-    saleOrder: { Number: 'WPORDER1' }
-  });
+    if (body?.payment_method !== 'cod') {
+      const receiveBill = await wp2k3.addReceiveBill({
+        ...body,
+        client: client,
+        saleOrder: saleOrder
+      });
 
-  console.log('receive_bill: ', receiveBill);
-  // }
+      console.log('receive_bill: ', receiveBill);
+    }
+  }
 })()

@@ -166,7 +166,11 @@ module.exports = class WP2K3 {
             FNumber: this.reccondtion.FNumber
           }
         },
-        FSaleOrderEntry: []
+        FSaleOrderEntry: [],
+        FSaleOrderPlan:[{
+          FNeedRecAdvance: true,
+          FRecAdvanceRate: 100
+        }]
       }
     };
     _.each(line_items, (row) => {
@@ -277,33 +281,34 @@ module.exports = class WP2K3 {
         FPAYORGID: {
           FNumber: this.org.Number
         },
-        FDOCUMENTSTATUS: 'C',
+        FDOCUMENTSTATUS: 'Z',
+        FBUSINESSTYPE: "1",
         FCancelStatus: 'A',
         FSETTLECUR: {
           FNumber: this.currency.FNumber
         },
         FEXCHANGERATE: '1',
         FRECEIVEBILLENTRY: [{
-          FPOSTDATE: moment(new Date(date_created)).format('YYYY-MM-DD'),
-          FPURPOSEID: { //SFKYT02_SYS: 預收款
-            FNumber: "SFKYT02_SYS" //SFKYT01_SYS: 銷售收款
-          },
           FSETTLETYPEID: {
             FNumber: 'JSFS01_SYS' // 現金
             //10: 電子支付； 09: 刷卡
+          },
+          FPURPOSEID: { //SFKYT02_SYS: 預收款
+            FNumber: "SFKYT02_SYS" //SFKYT01_SYS: 銷售收款
           },
           FRECEIVEITEMTYPE: '1',
           FRECEIVEITEM: saleOrder.Number,
           FSaleOrderID: saleOrder.Id,
           FSALEORDERNO: saleOrder.Number,
-          FORDERENTRYID: saleOrder.Id,
           FRECAMOUNTFOR_E: total,
           FRECTOTALAMOUNTFOR: total,
-          FPURPOSEID: { //SFKYT02_SYS: 預收款
-            FNumber: "SFKYT02_SYS" //SFKYT01_SYS: 銷售收款
-          },
+          FNOTVERIFICATEAMOUNT: total,
+          FPOSTDATE: moment(new Date(date_created)).format('YYYY-MM-DD'),
         }]
-      }
+      },
+      FRECEIVEBILLSRCENTRY: [{
+        FORDERBILLNO: saleOrder.Number
+      }]
     };
 
     const receiveBill = await this.k3cloud.receiveBill.saveReceiveBill({

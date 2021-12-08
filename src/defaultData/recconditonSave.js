@@ -1,5 +1,5 @@
 module.exports = {
-  "Creator": "",
+  "Creator": "Administrator",
   "NeedUpDateFields": [],
   "NeedReturnFields": [],
   "IsDeleteEntry": "True",
