@@ -285,9 +285,6 @@ module.exports = class WP2K3 {
         FEXCHANGERATE: '1',
         FRECEIVEBILLENTRY: [{
           FPOSTDATE: moment(new Date(date_created)).format('YYYY-MM-DD'),
-          FPURPOSEID: { //SFKYT02_SYS: 預收款
-            FNumber: "SFKYT02_SYS" //SFKYT01_SYS: 銷售收款
-          },
           FSETTLETYPEID: {
             FNumber: 'JSFS01_SYS' // 現金
             //10: 電子支付； 09: 刷卡
@@ -296,9 +293,15 @@ module.exports = class WP2K3 {
           FRECEIVEITEM: saleOrder.Number,
           FSaleOrderID: saleOrder.Id,
           FSALEORDERNO: saleOrder.Number,
+          FPURPOSEID: { //SFKYT02_SYS: 預收款
+            FNumber: "SFKYT02_SYS" //SFKYT01_SYS: 銷售收款
+          },
           FORDERENTRYID: saleOrder.Id,
           FRECAMOUNTFOR_E: total,
-          FRECTOTALAMOUNTFOR: total
+          FRECTOTALAMOUNTFOR: total,
+          FPURPOSEID: { //SFKYT02_SYS: 預收款
+            FNumber: "SFKYT02_SYS" //SFKYT01_SYS: 銷售收款
+          },
         }]
       }
     };
