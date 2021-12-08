@@ -98,15 +98,15 @@ module.exports = class WP2K3 {
     }
 
     if (client?.FCUSTID) {
-      const resp = await this.k3cloud.client.auditClient({
-        cookie: this.cookie,
-        data: {
-          createOrgId: this.org.Number,
-          Numbers: [
-            client.Number
-          ]
-        }
-      });
+      // const resp = await this.k3cloud.client.auditClient({
+      //   cookie: this.cookie,
+      //   data: {
+      //     createOrgId: this.org.Number,
+      //     Numbers: [
+      //       client.Number
+      //     ]
+      //   }
+      // });
     } else {
       const resp = await this.k3cloud.client.submitClient({
         cookie: this.cookie,
@@ -226,19 +226,8 @@ module.exports = class WP2K3 {
       cookie: this.cookie,
       data: data
     });
-
-    const resp = await this.k3cloud.saleOrder.submitSaleOrder({
-      cookie: this.cookie,
-      data: {
-        createOrgId: this.org.Number,
-        Numbers: [
-          saleOrder.Number
-        ]
-      }
-    });
-
-    if (!!resp?.ResponseStatus?.IsSuccess) {
-      await this.k3cloud.saleOrder.auditSaleOrder({
+    if (!!saleOrder?.ResponseStatus?.IsSuccess){
+      const resp = await this.k3cloud.saleOrder.submitSaleOrder({
         cookie: this.cookie,
         data: {
           createOrgId: this.org.Number,
@@ -247,6 +236,18 @@ module.exports = class WP2K3 {
           ]
         }
       });
+  
+      if (!!resp?.ResponseStatus?.IsSuccess) {
+        await this.k3cloud.saleOrder.auditSaleOrder({
+          cookie: this.cookie,
+          data: {
+            createOrgId: this.org.Number,
+            Numbers: [
+              saleOrder.Number
+            ]
+          }
+        });
+      }
     }
 
     return saleOrder;
