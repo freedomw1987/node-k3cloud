@@ -54,9 +54,11 @@ module.exports = class K3Cloud {
         FilterString: filterString || ''
       }
     }
+    // console.log('payload: ', JSON.stringify(payload));
     const resp = await this.instance.post(apiPath.listPath, payload, {
       headers: { cookie }
     });
+
     const results = keysMapping(fieldKeys, resp.data)
     return results
   }
@@ -85,7 +87,7 @@ module.exports = class K3Cloud {
       formId: formId,
       data: JSON.stringify(data)
     }
-    console.log('payload', JSON.stringify(payload));
+    // console.log('payload', JSON.stringify(payload));
     const resp = await this.instance.post(apiPath.savePath, payload, {
       headers: { cookie }
     });

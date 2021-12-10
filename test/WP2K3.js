@@ -300,8 +300,8 @@ module.exports = class WP2K3 {
           FRECEIVEITEM: saleOrder.Number,
           FSaleOrderID: saleOrder.Id,
           FSALEORDERNO: saleOrder.Number,
-          FRECAMOUNTFOR_E: total,
-          FRECTOTALAMOUNTFOR: total,
+          FRECAMOUNTFOR_E: total, //收款金額
+          FRECTOTALAMOUNTFOR: total, //应收金额
           FNOTVERIFICATEAMOUNT: total,
           FPOSTDATE: moment(new Date(date_created)).format('YYYY-MM-DD'),
         }]
@@ -349,10 +349,26 @@ module.exports = class WP2K3 {
   async getSaleOrder({ id }) {
     const saleOrder = await this.k3cloud.saleOrder.listOneSaleOrder({
       cookie: this.cookie,
-      filterString: `FNumber = 'WPORDER${id}'`
+      filterString: `FBILLNO = 'WPORDER${id}'`
     });
 
     return saleOrder;
+  }
+
+  async checkRecevieBill({ Fid }) {
+    const receiveBill = await this.k3cloud.receiveBill.listOneReceiveBill({
+      cookie: this.cookie,
+      filterString: `Fid = '${Fid}'`
+    });
+
+    console.log(receiveBill);
+
+    // const receiveBillEntry = await this.k3cloud.receiveBillEntry.listOneReceiveBillEntry({
+    //   cookie: this.cookie,
+    //   filterString: `FID = '${receiveBill.FID}'`
+    // });
+
+    // return receiveBillEntry;
   }
 
 

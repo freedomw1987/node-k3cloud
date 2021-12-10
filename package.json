@@ -17,8 +17,11 @@
   },
   "homepage": "https://github.com/freedomw1987/node-k3cloud#readme",
   "dependencies": {
+    "@woocommerce/woocommerce-rest-api": "^1.0.1",
     "lodash": "^4.17.21",
-    "moment": "^2.29.1"
+    "moment": "^2.29.1",
+    "mssql": "^7.3.0",
+    "woocommerce-api": "^1.5.0"
   },
   "devDependencies": {
     "axios": "^0.24.0"

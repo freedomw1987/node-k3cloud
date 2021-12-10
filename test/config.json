@@ -3,5 +3,18 @@
   "accid": "616392643d7fb6",
   "username": "Administrator",
   "appid": "winfullyLambda",
-  "appsecret": "28ecd1f20b524bc5bf1835ef2c4984e8"
+  "appsecret": "28ecd1f20b524bc5bf1835ef2c4984e8",
+  "mssql": {
+    "dns": "Server=103.231.252.83,1433;Database=AIS20211011092226;User Id=Winfullyapi1;Password=123=-0qazpl,;Encrypt=false",
+    "host": "103.231.252.83",
+    "user": "Winfullyapi1",
+    "password": "123=-0qazpl,",
+    "database": "AIS20211011092226"
+  },
+  "woocommerce": {
+    "url": "https://winfullybms.com/masterbathroom",
+    "consumerKey": "ck_b589eac6a865e769181cceeb7c911ada47ef9816",
+    "consumerSecret": "cs_0f981786e23b258a7e11a5232f4e6ee1640f9a3b",
+    "version": "wc/v3"
+  }
 }
