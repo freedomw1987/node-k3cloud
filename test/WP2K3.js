@@ -167,7 +167,7 @@ module.exports = class WP2K3 {
           }
         },
         FSaleOrderEntry: [],
-        FSaleOrderPlan:[{
+        FSaleOrderPlan: [{
           FNeedRecAdvance: true,
           FRecAdvanceRate: 100
         }]
@@ -226,7 +226,7 @@ module.exports = class WP2K3 {
       cookie: this.cookie,
       data: data
     });
-    if (!!saleOrder?.ResponseStatus?.IsSuccess){
+    if (!!saleOrder?.ResponseStatus?.IsSuccess) {
       const resp = await this.k3cloud.saleOrder.submitSaleOrder({
         cookie: this.cookie,
         data: {
@@ -236,7 +236,7 @@ module.exports = class WP2K3 {
           ]
         }
       });
-  
+
       if (!!resp?.ResponseStatus?.IsSuccess) {
         await this.k3cloud.saleOrder.auditSaleOrder({
           cookie: this.cookie,
@@ -252,7 +252,6 @@ module.exports = class WP2K3 {
 
     return saleOrder;
   }
-
 
   async addReceiveBill({ id, date_created, client, saleOrder, total }) {
 
@@ -345,5 +344,16 @@ module.exports = class WP2K3 {
 
     return receiveBill;
   }
+
+
+  async getSaleOrder({ id }) {
+    const saleOrder = await this.k3cloud.saleOrder.listOneSaleOrder({
+      cookie: this.cookie,
+      filterString: `FNumber = 'WPORDER${id}'`
+    });
+
+    return saleOrder;
+  }
+
 
 }
