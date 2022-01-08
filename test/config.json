@@ -1,15 +1,15 @@
 {
-  "baseURL": "http://103.231.252.83:8081",
-  "accid": "616392643d7fb6",
+  "baseURL": "http://42.194.215.98:8081",
+  "accid": "61c42f98b0df93",
   "username": "Administrator",
   "appid": "winfullyLambda",
   "appsecret": "28ecd1f20b524bc5bf1835ef2c4984e8",
   "mssql": {
-    "dns": "Server=103.231.252.83,1433;Database=AIS20211011092226;User Id=Winfullyapi1;Password=123=-0qazpl,;Encrypt=false",
-    "host": "103.231.252.83",
-    "user": "Winfullyapi1",
+    "dns": "Server=42.194.215.98,1433;Database=AIS20211223160218;User Id=Winfullyapi;Password=123=-0qazpl,;Encrypt=false",
+    "host": "42.194.215.98",
+    "user": "Winfullyapi",
     "password": "123=-0qazpl,",
-    "database": "AIS20211011092226"
+    "database": "AIS20211223160218"
   },
   "woocommerce": {
     "url": "https://winfullybms.com/masterbathroom",
