@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const moment = require('moment');
 const sql = require('mssql');
+const axios = require('axios');
 const WooCommerceAPI = require("@woocommerce/woocommerce-rest-api").default;
 const config = require('./config.json');
 
@@ -40,6 +41,29 @@ module.exports = class K32WP {
     await sql.connect(config.mssql.dns);
     const { recordset: result } = await sql.query(`SELECT * FROM [dbo].[T_SAL_OUTSTOCK] WHERE [FID] = ${Fid}`);
     return result;
+  }
+
+  /**
+   * 使用SKU獲取ERP的 即時庫存
+   * @param { SKU: string, FID: string} data 
+   * @returns {Array} T_STK_INVENTORY
+   */
+  async getInventory(data = {}) {
+    const { SKU, FID } = data;
+    await sql.connect(config.mssql.dns);
+    let query = `
+      SELECT 
+        inventory.[FID] ,inventory.[FBASEQTY] ,inventory.[FMATERIALID] ,inventory.[FMTONO] ,material.[FNUMBER] as SKU 
+      FROM [dbo].[T_STK_INVENTORY] AS inventory
+      LEFT JOIN [dbo].[T_BD_MATERIAL] AS material ON material.[FMATERIALID] = inventory.[FMATERIALID]
+      WHERE 
+        inventory.[FMTONO] = 'SC' 
+    `;
+    if (!!SKU) query += ` AND material.[FNUMBER] = '${SKU}'`;
+    if (!!FID) query += ` AND inventory.[FID] = '${FID}'`;
+
+    const { recordset: result } = await sql.query(query);
+    return result
   }
 
   /**
@@ -205,5 +229,68 @@ module.exports = class K32WP {
     }
 
   }
+
+  /**
+   * 使用SKU，獲取WP中的產品
+   * @param {string} sku
+   * @returns {Object} Product
+   */
+  async _getWPProductBySKU(sku) {
+    const { data } = await this.WooCommerce.get(`products`, {
+      sku: sku
+    });
+    return _.first(data);
+  }
+
+
+  /**
+   * 使用SKU，獲取WP中的產品
+   * @param {string} sku
+   * @returns {Object} Product
+   */
+  async _getWPProductByLikeSKU(sku) {
+    const { data } = await axios.get(`${config.woocommerce.url}/wp-json/marstree-rest/v1/products/${sku}`);
+    return data;
+  }
+
+  /**
+   * 使用SKU，去更新WP的產品庫存量
+   * @param {string} sku 
+   * @param {int} qty 
+   * @param
+   */
+  async updateWPProductStockBySKU(sku, qty = 0) {
+    const that = this;
+    const product = await this._getWPProductBySKU(sku);
+    if (!!!product?.id) return;
+    let result = [];
+    const { data } = await this.WooCommerce.put(`products/${product.id}`, {
+      stock_quantity: qty,
+      manage_stock: true
+    });
+
+    result.push(data);
+
+    //update bundle product
+    const bundleList = await this._getWPProductByLikeSKU(sku);
+    _.each(bundleList, async (bundle) => {
+      if (bundle?.id + '' === product?.id + '') return;
+      let skuList = bundle.sku.split('+');
+      const minQty = _.reduce(skuList, async (prev, curr) => {
+        const { stock_quantity } = await that._getWPProductBySKU(curr);
+        if (+stock_quantity <= +qty) return +stock_quantity;
+      }, qty);
+      console.log('minQty', minQty);
+
+      const { data } = await that.WooCommerce.put(`products/${bundle.id}`, {
+        stock_quantity: minQty,
+        manage_stock: true
+      });
+      result.push(data);
+    });
+
+    return result;
+  }
+
 
 }
